@@ -73,8 +73,14 @@ Step 7 - feat: add task pagination
 - Wired frontend `Dashboard` state to track active page and dynamically re-fetch data on click
 - Status: COMPLETED
 
-Step 8 - Form Validation — coming next
-Step 9 - Error Handling
+Step 8 - feat: add form validation with zod and react-hook-form
+- Installed `react-hook-form`, `zod`, and `@hookform/resolvers`
+- Created centralized input validation schemas in `features/validation/schemas.js` (email patterns, character limits, enums)
+- Refactored `LoginForm`, `SignupForm`, and `TaskFormModal` to replace manual state with Zod Resolvers
+- Display dynamic inline error messages matching input fields
+- Status: COMPLETED
+
+Step 9 - Error Handling — coming next
 Step 10 - Task Progress Tracking
 Step 11 - Drag and Drop Tasks
 Step 12 - Productivity Streak System
