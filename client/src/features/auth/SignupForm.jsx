@@ -1,29 +1,38 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from './authContext'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { signupSchema } from '../validation/schemas'
 
 function SignupForm() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const { signup, loading, error } = useAuth()
+  const { signup, loading, error: authError } = useAuth()
   const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!name || !email || !password) return
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    resolver: zodResolver(signupSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: ''
+    }
+  })
 
-    const res = await signup({ name, email, password })
+  const onSubmit = async (data) => {
+    const res = await signup(data) // updated to pass object directly
     if (res.success) {
       navigate('/dashboard')
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {error && (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {authError && (
         <div className="bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 p-3 rounded-lg text-sm">
-          {error}
+          {authError}
         </div>
       )}
 
@@ -33,12 +42,11 @@ function SignupForm() {
         </label>
         <input
           type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          {...register('name')}
           placeholder="Alex Doe"
-          className="input"
-          required
+          className={`input ${errors.name ? 'border-red-500 focus:ring-red-500' : ''}`}
         />
+        {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
       </div>
 
       <div>
@@ -47,12 +55,11 @@ function SignupForm() {
         </label>
         <input
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          {...register('email')}
           placeholder="you@example.com"
-          className="input"
-          required
+          className={`input ${errors.email ? 'border-red-500 focus:ring-red-500' : ''}`}
         />
+        {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
       </div>
 
       <div>
@@ -61,18 +68,16 @@ function SignupForm() {
         </label>
         <input
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          {...register('password')}
           placeholder="Min. 8 characters"
-          className="input"
-          minLength="6"
-          required
+          className={`input ${errors.password ? 'border-red-500 focus:ring-red-500' : ''}`}
         />
+        {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
       </div>
 
       <button
         type="submit"
-        disabled={loading || !name || !email || !password}
+        disabled={loading}
         className="btn-primary w-full mt-2"
       >
         {loading ? 'Creating account...' : 'Create account'}

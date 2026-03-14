@@ -1,0 +1,21 @@
+import { z } from 'zod'
+
+export const loginSchema = z.object({
+  email: z.string().min(1, 'Email is required').email('Invalid email format'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+})
+
+export const signupSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().min(1, 'Email is required').email('Invalid email format'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+})
+
+export const taskSchema = z.object({
+  title: z.string().min(1, 'Title is required').max(100, 'Title is too long'),
+  description: z.string().max(500, 'Description is too long').optional(),
+  status: z.enum(['Todo', 'In Progress', 'Done']),
+  priority: z.enum(['Low', 'Medium', 'High']),
+  // dueDate is optional, but if provided should be a valid string date
+  dueDate: z.string().optional().or(z.literal('')), 
+})

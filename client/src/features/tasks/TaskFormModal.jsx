@@ -1,54 +1,58 @@
 import { useState } from 'react'
 import Modal from '../../components/Modal'
 import { useTasks } from './taskContext'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { taskSchema } from '../validation/schemas'
 
 function TaskFormModal({ isOpen, onClose }) {
   const { addTask } = useTasks()
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [serverError, setServerError] = useState(null)
   
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    priority: 'Medium',
-    status: 'Todo'
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm({
+    resolver: zodResolver(taskSchema),
+    defaultValues: {
+      title: '',
+      description: '',
+      priority: 'Medium',
+      status: 'Todo'
+    }
   })
 
   // Reset form when opened
   const handleClose = () => {
-    setFormData({ title: '', description: '', priority: 'Medium', status: 'Todo' })
-    setError(null)
+    reset()
+    setServerError(null)
     onClose()
   }
 
-  const handleChange = (e) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!formData.title) return
-
+  const onSubmit = async (data) => {
     setLoading(true)
-    setError(null)
+    setServerError(null)
     
     // Call the addTask function from Context (which calls Axios which calls MongoDB)
-    const res = await addTask(formData)
+    const res = await addTask(data)
     
     setLoading(false)
     if (res.success) {
       handleClose()
     } else {
-      setError(res.error)
+      setServerError(res.error)
     }
   }
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Create New Task">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {error && (
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {serverError && (
           <div className="bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 p-3 rounded-lg text-sm">
-            {error}
+            {serverError}
           </div>
         )}
 
@@ -58,14 +62,12 @@ function TaskFormModal({ isOpen, onClose }) {
           </label>
           <input
             type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
+            {...register('title')}
             placeholder="What needs to be done?"
-            className="input"
-            required
+            className={`input ${errors.title ? 'border-red-500 focus:ring-red-500' : ''}`}
             autoFocus
           />
+          {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
         </div>
 
         <div>
@@ -73,12 +75,11 @@ function TaskFormModal({ isOpen, onClose }) {
             Description
           </label>
           <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
+            {...register('description')}
             placeholder="Add details..."
-            className="input min-h-[100px] resize-y"
+            className={`input min-h-[100px] resize-y ${errors.description ? 'border-red-500 focus:ring-red-500' : ''}`}
           />
+          {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>}
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -87,30 +88,28 @@ function TaskFormModal({ isOpen, onClose }) {
               Priority
             </label>
             <select
-              name="priority"
-              value={formData.priority}
-              onChange={handleChange}
+              {...register('priority')}
               className="input bg-white dark:bg-gray-800"
             >
               <option value="Low">Low</option>
               <option value="Medium">Medium</option>
               <option value="High">High</option>
             </select>
+            {errors.priority && <p className="text-red-500 text-xs mt-1">{errors.priority.message}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Status
             </label>
             <select
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
+              {...register('status')}
               className="input bg-white dark:bg-gray-800"
             >
               <option value="Todo">Todo</option>
               <option value="In Progress">In Progress</option>
               <option value="Done">Done</option>
             </select>
+            {errors.status && <p className="text-red-500 text-xs mt-1">{errors.status.message}</p>}
           </div>
         </div>
 
@@ -124,7 +123,7 @@ function TaskFormModal({ isOpen, onClose }) {
           </button>
           <button 
             type="submit" 
-            disabled={loading || !formData.title}
+            disabled={loading}
             className="btn-primary"
           >
             {loading ? 'Saving...' : 'Create Task'}
