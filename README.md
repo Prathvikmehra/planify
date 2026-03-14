@@ -1,1 +1,204 @@
-# planify
+Planify
+
+Planify is a smart task and productivity management web application that helps users organize tasks, track progress, and maintain focus on their goals.
+The application allows users to create, manage, and monitor tasks efficiently using modern full-stack technologies.
+
+The platform is designed to improve productivity by providing features such as task prioritization, deadlines, filtering, search, and a built-in focus timer.
+
+Project Description
+
+Many students and developers struggle to manage multiple assignments, deadlines, and daily tasks efficiently. Traditional to-do list applications often lack productivity insights and proper organization tools.
+
+Planify solves this problem by providing a centralized task management system where users can organize tasks, track progress, and stay focused while working or studying.
+
+Features
+
+User Authentication (Signup & Login)
+
+Protected Routes for authenticated users
+
+Task CRUD Operations (Create, Read, Update, Delete)
+
+Task Priorities (High / Medium / Low)
+
+Task Deadlines
+
+Subtasks for breaking large tasks into smaller steps
+
+Task Categories (Study, Personal, Projects, etc.)
+
+Search functionality
+
+Filtering and Sorting tasks
+
+Pagination for large task lists
+
+Dashboard productivity statistics
+
+Pomodoro focus timer
+
+Dark Mode / Light Mode support
+
+Responsive UI for desktop, tablet, and mobile
+
+Tech Stack
+
+Frontend
+React.js
+Tailwind CSS
+React Router
+Context API
+
+Backend
+Node.js
+Express.js
+
+Database
+MongoDB
+
+Project Structure
+planify/
+│
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── context/
+│   │   ├── hooks/
+│   │   └── utils/
+│
+├── server/
+│   ├── controllers/
+│   ├── routes/
+│   ├── models/
+│   ├── middleware/
+│   └── config/
+│
+└── README.md
+Prerequisites
+
+Before running the project, make sure you have the following installed:
+
+Node.js (v18 or higher)
+
+npm or yarn
+
+MongoDB or MongoDB Atlas
+
+Environment Variables
+
+Create a .env file inside the server folder.
+
+Example:
+
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+Installation
+
+Clone the repository
+
+git clone https://github.com/yourusername/planify.git
+
+Navigate to the project directory
+
+cd planify
+
+Install backend dependencies
+
+cd server
+npm install
+
+Install frontend dependencies
+
+cd ../client
+npm install
+Run the Project
+
+Start the backend server
+
+cd server
+npm run dev
+
+Start the frontend
+
+cd client
+npm start
+
+Application will run on:
+
+Frontend
+http://localhost:3000
+
+Backend API
+http://localhost:5000
+
+Scripts
+
+Common scripts used in the project:
+
+npm run dev
+npm start
+npm run build
+
+These commands start the development server, production server, or build the frontend.
+
+App Routes
+
+Public Routes
+
+/
+ /login
+ /signup
+
+User Routes
+
+/dashboard
+/tasks
+/profile
+/settings
+API Endpoints
+
+Authentication
+
+POST /api/auth/signup
+POST /api/auth/login
+
+Tasks
+
+GET /api/tasks
+POST /api/tasks
+PUT /api/tasks/:id
+DELETE /api/tasks/:id
+
+Users
+
+GET /api/users/profile
+PUT /api/users/profile
+Security Notes
+
+Never commit .env files to GitHub
+
+Keep API keys and database credentials private
+
+Use .env.example to show required environment variables
+
+Implement proper validation for user inputs
+
+Deployment
+
+Frontend
+Vercel / Netlify
+
+Backend
+Render / Railway
+
+Database
+MongoDB Atlas
+
+Summary
+
+Planify is a full-stack productivity application built using the MERN stack.
+It allows users to manage tasks efficiently, track productivity, and stay focused using modern web technologies.
+
+The project demonstrates key full-stack development concepts including authentication, API development, database integration, and responsive UI design.
