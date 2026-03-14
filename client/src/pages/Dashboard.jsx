@@ -5,6 +5,7 @@ import { SearchBar } from '../features/search/SearchBar'
 import { FilterPanel } from '../features/filters/FilterPanel'
 import { SortDropdown } from '../features/filters/SortDropdown'
 import { Pagination } from '../features/pagination/Pagination' // <---- NEW
+import { ProgressTracker } from '../features/tasks/ProgressTracker'
 
 function Dashboard() {
   const { tasks, pagination, loading, error, fetchTasks, removeTask } = useTasks()
@@ -63,6 +64,8 @@ function Dashboard() {
             New Task
           </button>
         </div>
+
+        <ProgressTracker />
 
         {/* Search, Filters & Sort Bar */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-800">

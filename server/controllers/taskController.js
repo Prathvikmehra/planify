@@ -133,3 +133,17 @@ export const deleteTask = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
+
+// @desc    Get task statistics for the user
+// @route   GET /api/tasks/stats
+// @access  Private
+export const getTaskStats = async (req, res) => {
+  try {
+    const totalTasks = await Task.countDocuments({ user: req.user.id })
+    const completedTasks = await Task.countDocuments({ user: req.user.id, status: 'Done' })
+    
+    res.status(200).json({ totalTasks, completedTasks })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
