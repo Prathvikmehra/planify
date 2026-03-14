@@ -37,3 +37,8 @@ export const deleteTask = async (taskId) => {
   const response = await axios.delete(API_URL + taskId, getAuthHeaders())
   return response.data
 }
+
+export const getTaskStats = async () => {
+  const response = await axios.get(API_URL + 'stats', getAuthHeaders())
+  return response.data
+}

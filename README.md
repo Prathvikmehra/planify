@@ -86,8 +86,14 @@ Step 9 - feat: add error handling and toast notifications
 - Created a top-level `ErrorBoundary` React Class Component to catch JS crashes and prevent white screens
 - Status: COMPLETED
 
-Step 10 - Task Progress Tracking — coming next
-Step 11 - Drag and Drop Tasks
+Step 10 - feat: add task progress tracking
+- Added `/api/tasks/stats` backend endpoint to count total and completed tasks
+- Updated `taskService` and `TaskContext` to fetch and store global user task statistics
+- Created animated `ProgressTracker` component displaying completed tasks vs total tasks with dynamic bar
+- Added ProgressTracker to `Dashboard`
+- Status: COMPLETED
+
+Step 11 - Drag and Drop Tasks — coming next
 Step 12 - Productivity Streak System
 Step 13 - Task Notes
 Step 14 - Activity History

@@ -16,6 +16,7 @@ export function TaskProvider({ children }) {
   const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [stats, setStats] = useState({ totalTasks: 0, completedTasks: 0 })
   
   const { user } = useAuth()
 
@@ -23,9 +24,11 @@ export function TaskProvider({ children }) {
   useEffect(() => {
     if (user) {
       fetchTasks()
+      fetchTaskStats()
     } else {
       setTasks([]) // Clear tasks on logout
       setPagination({ page: 1, pages: 1, total: 0 })
+      setStats({ totalTasks: 0, completedTasks: 0 })
     }
   }, [user])
 
@@ -48,12 +51,22 @@ export function TaskProvider({ children }) {
     }
   }
 
+  const fetchTaskStats = async () => {
+    try {
+      const data = await taskService.getTaskStats()
+      setStats(data)
+    } catch (err) {
+      console.error('Failed to fetch task stats:', err)
+    }
+  }
+
   const addTask = async (taskData) => {
     setLoading(true)
     try {
       const newTask = await taskService.createTask(taskData)
       setTasks([newTask, ...tasks])
       toast.success('Task created successfully')
+      fetchTaskStats() // Update stats
       return { success: true }
     } catch (err) {
       const msg = err.response?.data?.message || err.message
@@ -70,6 +83,7 @@ export function TaskProvider({ children }) {
       const updatedTask = await taskService.updateTask(taskId, taskData)
       setTasks(tasks.map((task) => (task._id === taskId ? updatedTask : task)))
       toast.success('Task updated successfully')
+      fetchTaskStats() // Update stats
       return { success: true }
     } catch (err) {
       const msg = err.response?.data?.message || err.message
@@ -84,6 +98,7 @@ export function TaskProvider({ children }) {
       await taskService.deleteTask(taskId)
       setTasks(tasks.filter((task) => task._id !== taskId))
       toast.success('Task deleted')
+      fetchTaskStats() // Update stats
       return { success: true }
     } catch (err) {
       const msg = err.response?.data?.message || err.message
@@ -94,7 +109,7 @@ export function TaskProvider({ children }) {
   }
 
   return (
-    <TaskContext.Provider value={{ tasks, loading, error, fetchTasks, addTask, editTask, removeTask, setError }}>
+    <TaskContext.Provider value={{ tasks, stats, loading, error, fetchTasks, fetchTaskStats, addTask, editTask, removeTask, setError }}>
       {children}
     </TaskContext.Provider>
   )
